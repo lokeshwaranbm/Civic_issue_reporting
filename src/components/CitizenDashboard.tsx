@@ -157,7 +157,7 @@ export const CitizenDashboard = () => {
                 <p className="text-muted-foreground">No issues in the system yet</p>
               </motion.div>
             ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
                 {allIssues.map((issue, index) => (
                   <IssueCard key={issue.id} issue={issue} onClick={setSelectedIssue} index={index} />
                 ))}
@@ -187,7 +187,7 @@ export const CitizenDashboard = () => {
                 </Button>
               </motion.div>
             ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
                 {myIssues.map((issue, index) => (
                   <IssueCard
                     key={issue.id}
@@ -221,7 +221,7 @@ export const CitizenDashboard = () => {
                 </p>
               </motion.div>
             ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
                 {supportedIssues.map((issue, index) => (
                     <IssueCard
                       key={issue.id}

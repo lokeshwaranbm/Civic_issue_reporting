@@ -17,7 +17,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30">
       <Header />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
         <AnimatePresence mode="wait">
           {currentUser.role === 'citizen' && (
             <motion.div

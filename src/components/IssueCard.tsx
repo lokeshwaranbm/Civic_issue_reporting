@@ -44,10 +44,10 @@ export const IssueCard = ({ issue, onClick, showAssignment = false, index = 0 }:
       <Card 
         className={`cursor-pointer hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-white overflow-hidden group ${
           issue.isOverdue ? 'ring-2 ring-red-500' : ''
-        } ${issue.priority === 'critical' ? 'ring-2 ring-orange-500' : ''}`}
+        } ${issue.priority === 'critical' ? 'ring-2 ring-orange-500' : ''} h-full flex flex-col`}
         onClick={() => onClick(issue)}
       >
-        <CardHeader className="relative">
+        <CardHeader className="relative pb-3 sm:pb-4">
           {/* Priority and SLA Badges */}
           <div className="flex gap-2 mb-2">
             {issue.priority === 'critical' && (
@@ -79,7 +79,7 @@ export const IssueCard = ({ issue, onClick, showAssignment = false, index = 0 }:
           <CardDescription className="line-clamp-2">{issue.description}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="flex items-center gap-2 justify-between">
+          <div className="flex items-center gap-2 justify-between flex-wrap sm:flex-nowrap">
             <CategoryBadge category={issue.category} />
             {currentUser?.role === 'citizen' && (
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -87,7 +87,7 @@ export const IssueCard = ({ issue, onClick, showAssignment = false, index = 0 }:
                   variant={hasUpvoted ? 'default' : 'outline'}
                   size="sm"
                   onClick={handleUpvote}
-                  className={`gap-1 ${hasUpvoted ? 'bg-gradient-to-r from-blue-600 to-indigo-600' : ''}`}
+                  className={`gap-1 text-xs sm:text-sm ${hasUpvoted ? 'bg-gradient-to-r from-blue-600 to-indigo-600' : ''}`}
                 >
                   <ThumbsUp className={`h-3 w-3 ${hasUpvoted ? 'fill-current' : ''}`} />
                   <span>{issue.upvoteCount}</span>
@@ -95,25 +95,26 @@ export const IssueCard = ({ issue, onClick, showAssignment = false, index = 0 }:
               </motion.div>
             )}
             {currentUser?.role !== 'citizen' && issue.upvoteCount > 0 && (
-              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
                 <ThumbsUp className="h-3 w-3" />
-                <span>{issue.upvoteCount} support{issue.upvoteCount !== 1 ? 's' : ''}</span>
+                <span className="hidden xs:inline">{issue.upvoteCount} support{issue.upvoteCount !== 1 ? 's' : ''}</span>
+                <span className="xs:hidden">{issue.upvoteCount}</span>
               </div>
             )}
           </div>
           
           <motion.div 
-            className="flex items-center gap-2 text-sm text-muted-foreground"
+            className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground"
             whileHover={{ x: 4 }}
             transition={{ duration: 0.2 }}
           >
-            <MapPin className="h-4 w-4 text-primary" />
-            <span>{issue.location}</span>
+            <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
+            <span className="line-clamp-1">{issue.location}</span>
           </motion.div>
           
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Calendar className="h-4 w-4 text-primary" />
-            <span>Reported {formatDistanceToNow(new Date(issue.createdAt), { addSuffix: true })}</span>
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
+            <span className="line-clamp-1">Reported {formatDistanceToNow(new Date(issue.createdAt), { addSuffix: true })}</span>
           </div>
 
           {showAssignment && issue.assignedToName && (
@@ -136,7 +137,7 @@ export const IssueCard = ({ issue, onClick, showAssignment = false, index = 0 }:
               <img
                 src={issue.imageUrl}
                 alt={issue.title}
-                className="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-32 sm:h-36 md:h-40 object-cover group-hover:scale-105 transition-transform duration-300"
               />
             </motion.div>
           )}
