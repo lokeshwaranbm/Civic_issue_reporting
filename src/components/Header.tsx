@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { useApp } from '../contexts/AppContext';
 import { Button } from './ui/button';
@@ -10,12 +11,15 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { Avatar, AvatarFallback } from './ui/avatar';
-import { Building2, LogOut, User } from 'lucide-react';
+import { Building2, LogOut, User, Languages } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { NotificationCenter } from './NotificationCenter';
+import { ProfileSettings } from './ProfileSettings';
+import { languageNames } from '../i18n/translations';
 
 export const Header = () => {
-  const { currentUser, logout } = useApp();
+  const { currentUser, logout, t, language } = useApp();
+  const [showSettings, setShowSettings] = useState(false);
 
   if (!currentUser) return null;
 
@@ -49,13 +53,24 @@ export const Header = () => {
           </div>
           <div>
             <h1 className="text-xl bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Civic Reporter
+              {t.appName}
             </h1>
-            <p className="text-xs text-muted-foreground hidden sm:block">Municipal Issue Management</p>
+            <p className="text-xs text-muted-foreground hidden sm:block">{t.appSubtitle}</p>
           </div>
         </motion.div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Language Indicator */}
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border border-blue-200/50 dark:border-blue-800/50"
+          >
+            <Languages className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+            <span className="text-xs font-medium text-blue-700 dark:text-blue-300">
+              {languageNames[language].split(' ')[0]}
+            </span>
+          </motion.div>
+
           {/* Notification Center */}
           <NotificationCenter />
 
@@ -88,24 +103,31 @@ export const Header = () => {
                   <p className="text-sm">{currentUser.name}</p>
                   <p className="text-xs text-muted-foreground">{currentUser.email}</p>
                   <Badge variant={roleColors[currentUser.role]} className="w-fit capitalize">
-                    {currentUser.role}
+                    {t[currentUser.role as keyof typeof t] || currentUser.role}
                   </Badge>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem disabled className="cursor-not-allowed">
+              <DropdownMenuItem onClick={() => setShowSettings(true)} className="cursor-pointer">
                 <User className="mr-2 h-4 w-4" />
-                Profile Settings
+                {t.profileSettings}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowSettings(true)} className="cursor-pointer">
+                <Languages className="mr-2 h-4 w-4" />
+                {t.languageSettings}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout} className="text-red-600 focus:text-red-600 cursor-pointer">
                 <LogOut className="mr-2 h-4 w-4" />
-                Logout
+                {t.logout}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
+
+      {/* Profile Settings Dialog */}
+      <ProfileSettings open={showSettings} onOpenChange={setShowSettings} />
     </motion.header>
   );
 };

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, Issue, Comment, IssueFeedback, Notification, DEFAULT_DEPARTMENTS } from '../types';
 import { mockUsers, initialIssues, initialComments } from '../lib/mockData';
 import { toast } from 'sonner@2.0.3';
+import { Language, getTranslation, Translations } from '../i18n/translations';
 
 interface AppContextType {
   currentUser: User | null;
@@ -14,6 +15,9 @@ interface AppContextType {
   departments: string[];
   notifications: Notification[];
   unreadCount: number;
+  language: Language;
+  setLanguage: (lang: Language) => void;
+  t: Translations;
   addIssue: (issue: Issue) => void;
   updateIssue: (id: string, updates: Partial<Issue>) => void;
   addComment: (comment: Comment) => void;
@@ -57,6 +61,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [issues, setIssues] = useState<Issue[]>(initialIssues);
   const [comments, setComments] = useState<Comment[]>(initialComments);
+  const [language, setLanguageState] = useState<Language>(() => {
+    if (typeof window === 'undefined') return 'en';
+    const stored = window.localStorage.getItem('appLanguage');
+    return (stored as Language) || 'en';
+  });
   const [users, setUsers] = useState<User[]>(() => {
     if (typeof window === 'undefined') return mockUsers;
     const stored = window.localStorage.getItem('appUsers');
@@ -333,10 +342,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return newUser;
   };
 
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('appLanguage', lang);
+    }
+    toast.success(`Language changed to ${lang.toUpperCase()}`);
+  };
+
   const logout = () => {
     setCurrentUser(null);
     localStorage.removeItem('currentUser');
   };
+
+  // Get translations based on current language
+  const t = getTranslation(language);
 
   // Unread notifications count for current user
   const unreadCount = currentUser
@@ -430,6 +450,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         departments,
         notifications,
         unreadCount,
+        language,
+        setLanguage,
+        t,
         addIssue,
         updateIssue,
         addComment,
